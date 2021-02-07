@@ -38,10 +38,37 @@ function App() {
       salary: newsalary,
       id: id
     }).then((response)=>{
-      alert('update')
+      alert('updated')
+      setemployeelist(
+        employeelist.map((val)=>{
+          //go through the database, if its the same employee using the id then keep everything the same but change the salary
+          //else 
+          return val.id==id ? {
+            id: val.id, 
+            name: val.name, 
+            position: val.position, 
+            age: val.age, 
+            salary: newsalary
+          }: val //else, keep the database the same
+        })
+      )
     })
   }
 
+  const deleteEmployee = (id)=>{
+    Axios.delete(`http://localhost:3001/delete/${id}`).then((response)=>{
+      setemployeelist(employeelist.filter((val)=>{
+        return val.id!=id //show all the rows of the array where id is not the same as the id we are passing in the method. 
+      }))
+    });
+  }
+
+
+
+
+
+
+  
   return (
     <div className="App">
       <div className="information">
@@ -75,6 +102,8 @@ function App() {
                 <button onClick={()=>{
                   updateEmployeeSalary(val.id)
                 }}>Update</button>
+
+                <button onClick={()=> {deleteEmployee(val.id)}}>Delete</button> 
               </div>
             </div>
             
